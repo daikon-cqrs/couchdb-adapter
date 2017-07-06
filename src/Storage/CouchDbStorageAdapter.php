@@ -42,7 +42,7 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
             $response = $this->request($viewPath, 'GET', [], $viewParams);
             $rawResponse = json_decode($response->getBody(), true);
         } catch (RequestException $error) {
-            if ($error->getResponse()->getStatusCode() === 404) {
+            if ($error->hasResponse() && $error->getResponse()->getStatusCode() === 404) {
                 return null;
             } else {
                 throw $error;

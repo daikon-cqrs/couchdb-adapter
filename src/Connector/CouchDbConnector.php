@@ -3,6 +3,7 @@
 namespace Daikon\CouchDb\Connector;
 
 use Daikon\Dbal\Connector\ConnectorInterface;
+use Daikon\Dbal\Connector\ConnectorTrait;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -11,69 +12,29 @@ use Psr\Http\Message\RequestInterface;
 
 final class CouchDbConnector implements ConnectorInterface
 {
-    private $settings;
-
-    private $connection;
-
-    public function __construct(array $settings)
-    {
-        $this->settings = $settings;
-    }
-
-    public function __destruct()
-    {
-        $this->disconnect();
-    }
-
-    public function getConnection()
-    {
-        if (!$this->isConnected()) {
-            $this->connection = $this->connect();
-        }
-
-        return $this->connection;
-    }
-
-    public function isConnected(): bool
-    {
-        return $this->connection !== null;
-    }
-
-    public function disconnect(): void
-    {
-        if ($this->isConnected()) {
-            $this->connection = null;
-        }
-    }
-
-    public function getSettings(): array
-    {
-        return $this->settings;
-    }
+    use ConnectorTrait;
 
     private function connect()
     {
-        $baseUri = sprintf(
-            '%s://%s:%s',
-            $this->settings['transport'],
-            $this->settings['host'],
-            $this->settings['port']
-        );
-
-        $clientOptions = ['base_uri' => $baseUri];
+        $clientOptions = [
+            'base_uri' => sprintf(
+                '%s://%s:%s',
+                $this->settings['scheme'],
+                $this->settings['host'],
+                $this->settings['port']
+            )
+        ];
 
         if (isset($this->settings['debug'])) {
             $clientOptions['debug'] = $this->settings['debug'] === true;
         }
 
-        if (isset($this->settings['auth'])
-            && !empty($this->settings['auth']['username'])
-            && !empty($this->settings['auth']['password'])
+        if (isset($this->settings['username']) && isset($this->settings['password'])
         ) {
             $clientOptions['auth'] = [
-                $this->settings['auth']['username'],
-                $this->settings['auth']['password'],
-                $this->settings['auth']['type'] ?? 'basic'
+                $this->settings['username'],
+                $this->settings['password'],
+                $this->settings['authentication'] ?? 'basic'
             ];
         }
 
