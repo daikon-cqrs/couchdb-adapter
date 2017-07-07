@@ -2,11 +2,12 @@
 
 namespace Daikon\CouchDb\Storage;
 
+use Daikon\EventSourcing\Aggregate\AggregateRevision;
+use Daikon\EventSourcing\EventStore\StoreResultInterface;
+use Daikon\EventSourcing\EventStore\StoreSuccess;
 use Daikon\EventSourcing\EventStore\Stream;
 use Daikon\EventSourcing\EventStore\StreamId;
 use Daikon\EventSourcing\EventStore\StreamInterface;
-use Daikon\EventSourcing\EventStore\StoreResultInterface;
-use Daikon\EventSourcing\EventStore\StoreSuccess;
 use Daikon\EventSourcing\EventStore\StreamRevision;
 use Daikon\EventSourcing\EventStore\StreamStoreInterface;
 
@@ -21,8 +22,8 @@ final class CouchDbStreamStore implements StreamStoreInterface
 
     public function checkout(
         StreamId $streamId,
-        StreamRevision $from = null,
-        StreamRevision $to = null
+        AggregateRevision $from = null,
+        AggregateRevision $to = null
     ): StreamInterface {
         $commitSequence = $this->storageAdapter->read($streamId->toNative());
         return new Stream($streamId, $commitSequence);
