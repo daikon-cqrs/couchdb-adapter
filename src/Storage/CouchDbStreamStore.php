@@ -2,13 +2,13 @@
 
 namespace Daikon\CouchDb\Storage;
 
-use Daikon\Cqrs\EventStore\CommitStream;
-use Daikon\Cqrs\EventStore\CommitStreamId;
-use Daikon\Cqrs\EventStore\CommitStreamInterface;
-use Daikon\Cqrs\EventStore\CommitStreamRevision;
-use Daikon\Cqrs\EventStore\StoreResultInterface;
-use Daikon\Cqrs\EventStore\StoreSuccess;
-use Daikon\Cqrs\EventStore\StreamStoreInterface;
+use Daikon\EventSourcing\EventStore\CommitStream;
+use Daikon\EventSourcing\EventStore\CommitStreamId;
+use Daikon\EventSourcing\EventStore\CommitStreamInterface;
+use Daikon\EventSourcing\EventStore\CommitStreamRevision;
+use Daikon\EventSourcing\EventStore\StoreResultInterface;
+use Daikon\EventSourcing\EventStore\StoreSuccess;
+use Daikon\EventSourcing\EventStore\StreamStoreInterface;
 
 final class CouchDbStreamStore implements StreamStoreInterface
 {
