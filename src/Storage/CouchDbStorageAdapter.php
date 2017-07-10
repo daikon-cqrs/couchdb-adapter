@@ -3,9 +3,9 @@
 namespace Daikon\CouchDb\Storage;
 
 use Daikon\CouchDb\Connector\CouchDbConnector;
-use Daikon\EventSourcing\EventStore\CommitSequence;
 use Daikon\Dbal\Exception\DbalException;
 use Daikon\Dbal\Storage\StorageAdapterInterface;
+use Daikon\EventSourcing\EventStore\CommitSequence;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 
@@ -43,7 +43,7 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
             $rawResponse = json_decode($response->getBody(), true);
         } catch (RequestException $error) {
             if ($error->hasResponse() && $error->getResponse()->getStatusCode() === 404) {
-                return null;
+                return CommitSequence::makeEmpty();
             } else {
                 throw $error;
             }
@@ -58,9 +58,9 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
         }, array_reverse($rawResponse['rows'])));
     }
 
-    public function write(string $identifier, array $data)
+    public function write(string $identifier, array $body)
     {
-        $response = $this->request($identifier, 'PUT', $data);
+        $response = $this->request($identifier, 'PUT', $body);
         $rawResponse = json_decode($response->getBody(), true);
 
         if (!isset($rawResponse['ok']) || !isset($rawResponse['rev'])) {
@@ -70,11 +70,12 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
 
     public function delete(string $identifier)
     {
+        throw new DbalException('Not yet implemented');
     }
 
     private function request(string $identifier, string $method, array $body = [], array $params = [])
     {
-        $requestPath = $this->buildRequestUrl($identifier, $params);
+        $requestPath = $this->buildRequestPath($identifier, $params);
 
         if (empty($body)) {
             $request = new Request($method, $requestPath, ['Accept' => 'application/json']);
@@ -90,13 +91,14 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
         return $this->connector->getConnection()->send($request);
     }
 
-    private function buildRequestUrl(string $identifier, array $params = [])
+    private function buildRequestPath(string $identifier, array $params = [])
     {
         $settings = $this->connector->getSettings();
         $requestPath = sprintf('/%s/%s', $settings['database'], $identifier);
         if (!empty($params)) {
             $requestPath .= '?'.http_build_query($params);
         }
+
         return str_replace('//', '/', $requestPath);
     }
 }
