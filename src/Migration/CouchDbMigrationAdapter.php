@@ -30,9 +30,8 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
         } catch (RequestException $error) {
             if ($error->hasResponse() && $error->getResponse()->getStatusCode() === 404) {
                 return new MigrationList;
-            } else {
-                throw new MigrationException($error->getMessage());
             }
+            throw $error;
         }
         return $this->createMigrationList($rawResponse['migrations']);
     }
@@ -75,24 +74,6 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
         return new MigrationList($migrations);
     }
 
-    private function request(string $identifier, string $method, array $body = [], array $params = [])
-    {
-        $requestPath = $this->buildRequestPath($identifier, $params);
-
-        if (empty($body)) {
-            $request = new Request($method, $requestPath, ['Accept' => 'application/json']);
-        } else {
-            $request = new Request(
-                $method,
-                $requestPath,
-                ['Accept' => 'application/json', 'Content-Type' => 'application/json'],
-                json_encode($body)
-            );
-        }
-
-        return $this->connector->getConnection()->send($request);
-    }
-
     private function getCurrentRevision(string $identifier): ?string
     {
         try {
@@ -100,21 +81,31 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
             $revision = trim(current($response->getHeader('ETag')), '"');
         } catch (RequestException $error) {
             if (!$error->hasResponse() || $error->getResponse()->getStatusCode() !== 404) {
-                throw new MigrationException($error->getMessage());
+                throw $error;
             }
         }
 
         return $revision ?? null;
     }
 
-    private function buildRequestPath(string $identifier, array $params = [])
+    private function request(string $identifier, string $method, array $body = [], array $params = [])
+    {
+        $uri = $this->buildUri($identifier, $params);
+
+        $request = empty($body)
+            ? new Request($method, $uri)
+            : new Request($method, $uri, [], json_encode($body));
+
+        return $this->connector->getConnection()->send($request);
+    }
+
+    private function buildUri(string $identifier, array $params = [])
     {
         $settings = $this->connector->getSettings();
-        $requestPath = sprintf('/%s/%s', $settings['database'], $identifier);
+        $uri = sprintf('/%s/%s', $settings['database'], $identifier);
         if (!empty($params)) {
-            $requestPath .= '?'.http_build_query($params);
+            $uri .= '?'.http_build_query($params);
         }
-
-        return str_replace('//', '/', $requestPath);
+        return str_replace('//', '/', $uri);
     }
 }

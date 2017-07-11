@@ -2,7 +2,6 @@
 
 namespace Daikon\CouchDb\Migration;
 
-use Daikon\Dbal\Exception\MigrationException;
 use Daikon\Dbal\Migration\MigrationTrait;
 use GuzzleHttp\Exception\RequestException;
 
@@ -18,7 +17,7 @@ trait CouchDbMigrationTrait
             $client->put('/'.$database);
         } catch (RequestException $error) {
             if (!$error->hasResponse() || !$error->getResponse()->getStatusCode() === 409) {
-                throw new MigrationException($error->getMessage());
+                throw $error;
             }
         }
     }
@@ -31,7 +30,7 @@ trait CouchDbMigrationTrait
             $client->delete('/'.$database);
         } catch (RequestException $error) {
             if (!$error->hasResponse() || !$error->getResponse()->getStatusCode() === 404) {
-                throw new MigrationException($error->getMessage());
+                throw $error;
             }
         }
     }
@@ -45,26 +44,17 @@ trait CouchDbMigrationTrait
             'views' => $views
         ];
 
-        try {
-            $requestPath = sprintf('/%s/_design/%s', $database, $name);
-            $client->put($requestPath, ['body' => json_encode($body)]);
-        } catch (RequestException $error) {
-            throw new MigrationException($error->getMessage());
-        }
+        $requestPath = sprintf('/%s/_design/%s', $database, $name);
+        $client->put($requestPath, ['body' => json_encode($body)]);
     }
 
     private function deleteDesignDoc(string $database, string $name): void
     {
         $client = $this->connector->getConnection();
-
-        try {
-            $requestPath = sprintf('/%s/_design/%s', $database, $name);
-            $response = $client->head($requestPath);
-            $revision = trim(current($response->getHeader('ETag')), '"');
-            $client->delete(sprintf('%s?rev=%s', $requestPath, $revision));
-        } catch (RequestException $error) {
-            throw new MigrationException($error->getMessage());
-        }
+        $requestPath = sprintf('/%s/_design/%s', $database, $name);
+        $response = $client->head($requestPath);
+        $revision = trim(current($response->getHeader('ETag')), '"');
+        $client->delete(sprintf('%s?rev=%s', $requestPath, $revision));
     }
 
     private function getDatabaseName(): string

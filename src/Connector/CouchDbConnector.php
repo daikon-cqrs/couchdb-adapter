@@ -5,10 +5,6 @@ namespace Daikon\CouchDb\Connector;
 use Daikon\Dbal\Connector\ConnectorInterface;
 use Daikon\Dbal\Connector\ConnectorTrait;
 use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Uri;
-use Psr\Http\Message\RequestInterface;
 
 final class CouchDbConnector implements ConnectorInterface
 {
@@ -29,36 +25,20 @@ final class CouchDbConnector implements ConnectorInterface
             $clientOptions['debug'] = $this->settings['debug'] === true;
         }
 
-        if (isset($this->settings['username']) && isset($this->settings['password'])
+        if (isset($this->settings['user']) && !empty($this->settings['user'])
+            && isset($this->settings['password']) && !empty($this->settings['password'])
         ) {
             $clientOptions['auth'] = [
-                $this->settings['username'],
+                $this->settings['user'],
                 $this->settings['password'],
                 $this->settings['authentication'] ?? 'basic'
             ];
         }
 
-        if (isset($this->settings['default_headers'])) {
-            $clientOptions['headers'] = $this->settings['default_headers'];
-        }
-
-        if (isset($this->settings['default_options'])) {
-            $clientOptions = array_merge($clientOptions, $this->settings['default_options']);
-        }
-
-        if (isset($this->settings['default_query'])) {
-            $handler = HandlerStack::create();
-            $handler->push(Middleware::mapRequest(
-                function (RequestInterface $request) {
-                    $uri = $request->getUri();
-                    foreach ($this->settings['default_query'] as $param => $value) {
-                        $uri = Uri::withQueryValue($uri, $param, $value);
-                    }
-                    return $request->withUri($uri);
-                }
-            ));
-            $clientOptions['handler'] = $handler;
-        }
+        $clientOptions['headers'] = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+        ];
 
         return new Client($clientOptions);
     }
