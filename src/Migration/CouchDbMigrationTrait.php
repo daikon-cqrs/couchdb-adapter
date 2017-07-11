@@ -10,13 +10,12 @@ trait CouchDbMigrationTrait
 {
     use MigrationTrait;
 
-    private function createDatabase(): void
+    private function createDatabase(string $database): void
     {
         $client = $this->connector->getConnection();
-        $databaseName = $this->getDatabaseName();
 
         try {
-            $client->put('/'.$databaseName);
+            $client->put('/'.$database);
         } catch (RequestException $error) {
             if (!$error->hasResponse() || !$error->getResponse()->getStatusCode() === 409) {
                 throw new MigrationException($error->getMessage());
@@ -24,13 +23,12 @@ trait CouchDbMigrationTrait
         }
     }
 
-    private function deleteDatabase(): void
+    private function deleteDatabase(string $database): void
     {
         $client = $this->connector->getConnection();
-        $databaseName = $this->getDatabaseName();
 
         try {
-            $client->delete('/'.$databaseName);
+            $client->delete('/'.$database);
         } catch (RequestException $error) {
             if (!$error->hasResponse() || !$error->getResponse()->getStatusCode() === 404) {
                 throw new MigrationException($error->getMessage());
@@ -38,10 +36,9 @@ trait CouchDbMigrationTrait
         }
     }
 
-    private function createDesignDoc(string $name, array $views): void
+    private function createDesignDoc(string $database, string $name, array $views): void
     {
         $client = $this->connector->getConnection();
-        $databaseName = $this->getDatabaseName();
 
         $body = [
             'language' => 'javascript',
@@ -49,20 +46,19 @@ trait CouchDbMigrationTrait
         ];
 
         try {
-            $requestPath = sprintf('/%s/_design/%s', $databaseName, $name);
+            $requestPath = sprintf('/%s/_design/%s', $database, $name);
             $client->put($requestPath, ['body' => json_encode($body)]);
         } catch (RequestException $error) {
             throw new MigrationException($error->getMessage());
         }
     }
 
-    private function deleteDesignDoc(string $name): void
+    private function deleteDesignDoc(string $database, string $name): void
     {
         $client = $this->connector->getConnection();
-        $databaseName = $this->getDatabaseName();
 
         try {
-            $requestPath = sprintf('/%s/_design/%s', $databaseName, $name);
+            $requestPath = sprintf('/%s/_design/%s', $database, $name);
             $response = $client->head($requestPath);
             $revision = trim(current($response->getHeader('ETag')), '"');
             $client->delete(sprintf('%s?rev=%s', $requestPath, $revision));
