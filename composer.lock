@@ -110,12 +110,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/dbal.git",
-                "reference": "06ba11eb9e3c0cf2be846fa4c29dfd5a2d5f2cd8"
+                "reference": "288ec3856d0e9e2dc30f0391507c8ddc20f2004c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/dbal/zipball/06ba11eb9e3c0cf2be846fa4c29dfd5a2d5f2cd8",
-                "reference": "06ba11eb9e3c0cf2be846fa4c29dfd5a2d5f2cd8",
+                "url": "https://api.github.com/repos/daikon-cqrs/dbal/zipball/288ec3856d0e9e2dc30f0391507c8ddc20f2004c",
+                "reference": "288ec3856d0e9e2dc30f0391507c8ddc20f2004c",
                 "shasum": ""
             },
             "require": {
@@ -145,7 +145,7 @@
                 "dbal",
                 "immutable"
             ],
-            "time": "2017-07-10 12:38:11"
+            "time": "2017-07-12 00:29:21"
         },
         {
             "name": "daikon/entity",
