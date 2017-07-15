@@ -31,7 +31,7 @@ final class CouchDbStreamStore implements StreamStoreInterface
 
     public function commit(StreamInterface $stream, StreamRevision $knownHead): StoreResultInterface
     {
-        $commitSequence = $stream->getCommitRange($knownHead, $stream->getStreamRevision());
+        $commitSequence = $stream->getCommitRange($knownHead->increment(), $stream->getStreamRevision());
         foreach ($commitSequence as $commit) {
             $identifier = $stream->getStreamId()->toNative().'-'.$commit->getStreamRevision();
             $this->storageAdapter->write($identifier, $commit->toArray());
