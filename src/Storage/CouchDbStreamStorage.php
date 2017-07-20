@@ -12,7 +12,7 @@ use Daikon\EventSourcing\EventStore\Stream\StreamIdInterface;
 use Daikon\EventSourcing\EventStore\Stream\StreamInterface;
 use Daikon\EventSourcing\EventStore\Stream\StreamRevision;
 
-final class CouchDbStreamStore implements StreamStorageInterface
+final class CouchDbStreamStorage implements StreamStorageInterface
 {
     private $storageAdapter;
 
