@@ -5,7 +5,7 @@ namespace Daikon\CouchDb\Storage;
 use Daikon\CouchDb\Connector\CouchDbConnector;
 use Daikon\Dbal\Exception\DbalException;
 use Daikon\Dbal\Storage\StorageAdapterInterface;
-use Daikon\EventSourcing\EventStore\CommitSequence;
+use Daikon\EventSourcing\EventStore\Commit\CommitSequence;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 

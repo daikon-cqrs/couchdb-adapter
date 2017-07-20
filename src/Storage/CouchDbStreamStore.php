@@ -3,15 +3,16 @@
 namespace Daikon\CouchDb\Storage;
 
 use Daikon\EventSourcing\Aggregate\AggregateRevision;
-use Daikon\EventSourcing\EventStore\StoreResultInterface;
-use Daikon\EventSourcing\EventStore\StoreSuccess;
-use Daikon\EventSourcing\EventStore\Stream;
-use Daikon\EventSourcing\EventStore\StreamId;
-use Daikon\EventSourcing\EventStore\StreamInterface;
-use Daikon\EventSourcing\EventStore\StreamRevision;
-use Daikon\EventSourcing\EventStore\StreamStoreInterface;
+use Daikon\EventSourcing\EventStore\Commit\CommitInterface;
+use Daikon\EventSourcing\EventStore\Storage\StorageResultInterface;
+use Daikon\EventSourcing\EventStore\Storage\StorageSuccess;
+use Daikon\EventSourcing\EventStore\Storage\StreamStorageInterface;
+use Daikon\EventSourcing\EventStore\Stream\Stream;
+use Daikon\EventSourcing\EventStore\Stream\StreamIdInterface;
+use Daikon\EventSourcing\EventStore\Stream\StreamInterface;
+use Daikon\EventSourcing\EventStore\Stream\StreamRevision;
 
-final class CouchDbStreamStore implements StreamStoreInterface
+final class CouchDbStreamStore implements StreamStorageInterface
 {
     private $storageAdapter;
 
@@ -21,7 +22,7 @@ final class CouchDbStreamStore implements StreamStoreInterface
     }
 
     public function checkout(
-        StreamId $streamId,
+        StreamIdInterface $streamId,
         AggregateRevision $from = null,
         AggregateRevision $to = null
     ): StreamInterface {
@@ -29,13 +30,14 @@ final class CouchDbStreamStore implements StreamStoreInterface
         return new Stream($streamId, $commitSequence);
     }
 
-    public function commit(StreamInterface $stream, StreamRevision $knownHead): StoreResultInterface
+    public function commit(StreamInterface $stream, StreamRevision $knownHead): StorageResultInterface
     {
         $commitSequence = $stream->getCommitRange($knownHead->increment(), $stream->getStreamRevision());
+        /** @var CommitInterface $commit */
         foreach ($commitSequence as $commit) {
             $identifier = $stream->getStreamId()->toNative().'-'.$commit->getStreamRevision();
             $this->storageAdapter->write($identifier, $commit->toArray());
         }
-        return new StoreSuccess;
+        return new StorageSuccess;
     }
 }
