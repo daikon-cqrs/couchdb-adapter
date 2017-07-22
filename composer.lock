@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e76b2187de780e7ad2296b2f0a420db4",
+    "content-hash": "3507dd488ea9f18965c5278e5076b16c",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -67,12 +67,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/data-structure.git",
-                "reference": "af6db0846849b07e373a3e4af91447b788db8709"
+                "reference": "daf5c2b2310b11129934bad05be7f274e396b42b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/data-structure/zipball/af6db0846849b07e373a3e4af91447b788db8709",
-                "reference": "af6db0846849b07e373a3e4af91447b788db8709",
+                "url": "https://api.github.com/repos/daikon-cqrs/data-structure/zipball/daf5c2b2310b11129934bad05be7f274e396b42b",
+                "reference": "daf5c2b2310b11129934bad05be7f274e396b42b",
                 "shasum": ""
             },
             "require": {
@@ -109,7 +109,7 @@
                 "list",
                 "map"
             ],
-            "time": "2017-07-20 23:12:04"
+            "time": "2017-07-22 22:08:25"
         },
         {
             "name": "daikon/dbal",
@@ -117,12 +117,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/dbal.git",
-                "reference": "957b22470c58d889b2a97c109b5c4003e721953b"
+                "reference": "3352c618940cba2e6c55e3e886555e87957556fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/dbal/zipball/957b22470c58d889b2a97c109b5c4003e721953b",
-                "reference": "957b22470c58d889b2a97c109b5c4003e721953b",
+                "url": "https://api.github.com/repos/daikon-cqrs/dbal/zipball/3352c618940cba2e6c55e3e886555e87957556fb",
+                "reference": "3352c618940cba2e6c55e3e886555e87957556fb",
                 "shasum": ""
             },
             "require": {
@@ -152,7 +152,7 @@
                 "dbal",
                 "immutable"
             ],
-            "time": "2017-07-12 16:39:02"
+            "time": "2017-07-22 22:16:31"
         },
         {
             "name": "daikon/event-sourcing",
@@ -204,18 +204,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/message-bus.git",
-                "reference": "1f19d7234a5f4db875f9f8708dcbb638bcbc1407"
+                "reference": "c00c8346625798324b7edf729bf2382ef76cb7b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/message-bus/zipball/1f19d7234a5f4db875f9f8708dcbb638bcbc1407",
-                "reference": "1f19d7234a5f4db875f9f8708dcbb638bcbc1407",
+                "url": "https://api.github.com/repos/daikon-cqrs/message-bus/zipball/c00c8346625798324b7edf729bf2382ef76cb7b5",
+                "reference": "c00c8346625798324b7edf729bf2382ef76cb7b5",
                 "shasum": ""
             },
             "require": {
                 "daikon/data-structure": "master@dev",
                 "php": ">=7.1",
-                "ramsey/uuid": "3.6.*"
+                "ramsey/uuid": "^3.6.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6.2",
@@ -238,7 +238,7 @@
                 "message-bus",
                 "messaging"
             ],
-            "time": "2017-07-17 10:46:40"
+            "time": "2017-07-22 22:13:14"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2663,8 +2663,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "daikon/event-sourcing": 20,
         "daikon/dbal": 20,
+        "daikon/event-sourcing": 20,
         "satooshi/php-coveralls": 20
     },
     "prefer-stable": true,
