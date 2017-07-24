@@ -4,8 +4,9 @@ namespace Daikon\CouchDb\Storage;
 
 use Daikon\CouchDb\Connector\CouchDbConnector;
 use Daikon\Dbal\Exception\DbalException;
-use Daikon\Dbal\Storage\StorageAdapterInterface;
 use Daikon\EventSourcing\EventStore\Commit\CommitSequence;
+use Daikon\EventSourcing\EventStore\Commit\CommitSequenceInterface;
+use Daikon\EventSourcing\EventStore\Storage\StorageAdapterInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 
@@ -21,7 +22,7 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
         $this->settings = $settings;
     }
 
-    public function read(string $identifier)
+    public function load(string $identifier): CommitSequenceInterface
     {
         $viewPath = sprintf(
             '/_design/%s/_view/%s',
@@ -58,7 +59,7 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
         }, array_reverse($rawResponse['rows'])));
     }
 
-    public function write(string $identifier, array $body)
+    public function append(string $identifier, array $body): void
     {
         $response = $this->request($identifier, 'PUT', $body);
         $rawResponse = json_decode($response->getBody(), true);
@@ -68,7 +69,7 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
         }
     }
 
-    public function delete(string $identifier)
+    public function purge(string $identifier): void
     {
         throw new DbalException('Not yet implemented');
     }

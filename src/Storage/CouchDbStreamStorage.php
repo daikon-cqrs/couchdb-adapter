@@ -21,22 +21,22 @@ final class CouchDbStreamStorage implements StreamStorageInterface
         $this->storageAdapter = $storageAdapter;
     }
 
-    public function checkout(
+    public function load(
         StreamIdInterface $streamId,
         AggregateRevision $from = null,
         AggregateRevision $to = null
     ): StreamInterface {
-        $commitSequence = $this->storageAdapter->read($streamId->toNative());
+        $commitSequence = $this->storageAdapter->load($streamId->toNative());
         return new Stream($streamId, $commitSequence);
     }
 
-    public function commit(StreamInterface $stream, StreamRevision $knownHead): StorageResultInterface
+    public function append(StreamInterface $stream, StreamRevision $knownHead): StorageResultInterface
     {
         $commitSequence = $stream->getCommitRange($knownHead->increment(), $stream->getStreamRevision());
         /** @var CommitInterface $commit */
         foreach ($commitSequence as $commit) {
             $identifier = $stream->getStreamId()->toNative().'-'.$commit->getStreamRevision();
-            $this->storageAdapter->write($identifier, $commit->toArray());
+            $this->storageAdapter->append($identifier, $commit->toArray());
         }
         return new StorageSuccess;
     }
