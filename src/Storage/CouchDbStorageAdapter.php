@@ -7,7 +7,6 @@ use Daikon\Dbal\Exception\DbalException;
 use Daikon\EventSourcing\EventStore\Commit\CommitSequence;
 use Daikon\EventSourcing\EventStore\Commit\CommitSequenceInterface;
 use Daikon\EventSourcing\EventStore\Storage\StorageAdapterInterface;
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 
 final class CouchDbStorageAdapter implements StorageAdapterInterface
@@ -39,16 +38,8 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
             'limit' => 1000 // @todo use snapshot size config setting as soon as available
         ];
 
-        try {
-            $response = $this->request($viewPath, 'GET', [], $viewParams);
-            $rawResponse = json_decode($response->getBody(), true);
-        } catch (RequestException $error) {
-            if ($error->hasResponse() && $error->getResponse()->getStatusCode() === 404) {
-                return CommitSequence::makeEmpty();
-            } else {
-                throw $error;
-            }
-        }
+        $response = $this->request($viewPath, 'GET', [], $viewParams);
+        $rawResponse = json_decode($response->getBody(), true);
 
         if (!isset($rawResponse['total_rows'])) {
             throw new DbalException('Failed to read data for '.$identifier);

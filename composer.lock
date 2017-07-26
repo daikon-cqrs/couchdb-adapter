@@ -162,12 +162,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/event-sourcing.git",
-                "reference": "d67b9c316f3a8a3d6229ee8d50c201fee4f82445"
+                "reference": "4f62186ff2cb8838f9a223c38c446c7e846f6084"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/event-sourcing/zipball/d67b9c316f3a8a3d6229ee8d50c201fee4f82445",
-                "reference": "d67b9c316f3a8a3d6229ee8d50c201fee4f82445",
+                "url": "https://api.github.com/repos/daikon-cqrs/event-sourcing/zipball/4f62186ff2cb8838f9a223c38c446c7e846f6084",
+                "reference": "4f62186ff2cb8838f9a223c38c446c7e846f6084",
                 "shasum": ""
             },
             "require": {
@@ -198,7 +198,7 @@
                 "event-sourcing",
                 "immutable"
             ],
-            "time": "2017-07-23 23:54:28"
+            "time": "2017-07-26 15:22:29"
         },
         {
             "name": "daikon/message-bus",
@@ -248,12 +248,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/read-model.git",
-                "reference": "c3ca89b48d7dcfa11f76a107d927000a710b255f"
+                "reference": "72a5c832d7a73038041df0c1ef823896360e059d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/read-model/zipball/c3ca89b48d7dcfa11f76a107d927000a710b255f",
-                "reference": "c3ca89b48d7dcfa11f76a107d927000a710b255f",
+                "url": "https://api.github.com/repos/daikon-cqrs/read-model/zipball/72a5c832d7a73038041df0c1ef823896360e059d",
+                "reference": "72a5c832d7a73038041df0c1ef823896360e059d",
                 "shasum": ""
             },
             "require": {
@@ -286,7 +286,7 @@
                 "read-model",
                 "repository"
             ],
-            "time": "2017-07-23 23:57:41"
+            "time": "2017-07-24 15:53:36"
         },
         {
             "name": "guzzlehttp/guzzle",
