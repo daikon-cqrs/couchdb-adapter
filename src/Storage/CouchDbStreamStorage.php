@@ -36,7 +36,7 @@ final class CouchDbStreamStorage implements StreamStorageInterface
         /** @var CommitInterface $commit */
         foreach ($commitSequence as $commit) {
             $identifier = $stream->getStreamId()->toNative().'-'.$commit->getStreamRevision();
-            $this->storageAdapter->append($identifier, $commit->toArray());
+            $this->storageAdapter->append($identifier, $commit->toNative());
         }
         return new StorageSuccess;
     }

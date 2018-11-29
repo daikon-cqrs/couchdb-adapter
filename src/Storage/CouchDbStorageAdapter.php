@@ -45,7 +45,7 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
             throw new DbalException('Failed to read data for '.$identifier);
         }
 
-        return CommitSequence::fromArray(array_map(function (array $commitData) {
+        return CommitSequence::fromNative(array_map(function (array $commitData) {
             return $commitData['doc'];
         }, array_reverse($rawResponse['rows'])));
     }

@@ -9,8 +9,8 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^7.2",
-        "daikon/dbal": "dev-upgrade-7.2",
-        "daikon/event-sourcing": "dev-upgrade-7.2",
+        "daikon/dbal": "dev-upgrade/nativecalls",
+        "daikon/event-sourcing": "dev-upgrade/nativecalls",
         "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {

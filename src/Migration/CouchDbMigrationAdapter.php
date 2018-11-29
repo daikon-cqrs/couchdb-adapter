@@ -40,7 +40,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
     {
         $body = [
             'target' => $identifier,
-            'migrations' => $executedMigrations->toArray()
+            'migrations' => $executedMigrations->toNative()
         ];
 
         if ($revision = $this->getCurrentRevision($identifier)) {
