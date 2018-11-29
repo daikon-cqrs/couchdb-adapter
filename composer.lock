@@ -111,12 +111,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/dbal.git",
-                "reference": "8cb8109d442496ccb846e4f0544d887fcf0dcf7b"
+                "reference": "68bfd8a69215d8938444ba4e94169111a64e8c5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/dbal/zipball/8cb8109d442496ccb846e4f0544d887fcf0dcf7b",
-                "reference": "8cb8109d442496ccb846e4f0544d887fcf0dcf7b",
+                "url": "https://api.github.com/repos/daikon-cqrs/dbal/zipball/68bfd8a69215d8938444ba4e94169111a64e8c5d",
+                "reference": "68bfd8a69215d8938444ba4e94169111a64e8c5d",
                 "shasum": ""
             },
             "require": {
@@ -150,7 +150,7 @@
                 "dbal",
                 "immutable"
             ],
-            "time": "2018-11-29T21:16:11+00:00"
+            "time": "2018-11-29T21:41:34+00:00"
         },
         {
             "name": "daikon/event-sourcing",
@@ -278,12 +278,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/read-model.git",
-                "reference": "092462992746b754e086b7257f254ba4631617db"
+                "reference": "f338066b48e33dfcca7c33746df83e91de58f8d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/read-model/zipball/092462992746b754e086b7257f254ba4631617db",
-                "reference": "092462992746b754e086b7257f254ba4631617db",
+                "url": "https://api.github.com/repos/daikon-cqrs/read-model/zipball/f338066b48e33dfcca7c33746df83e91de58f8d1",
+                "reference": "f338066b48e33dfcca7c33746df83e91de58f8d1",
                 "shasum": ""
             },
             "require": {
@@ -318,7 +318,7 @@
                 "read-model",
                 "repository"
             ],
-            "time": "2018-11-29T18:45:48+00:00"
+            "time": "2018-11-29T21:35:05+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
