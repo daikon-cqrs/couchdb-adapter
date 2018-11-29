@@ -12,8 +12,10 @@ use GuzzleHttp\Psr7\Request;
 
 final class CouchDbMigrationAdapter implements MigrationAdapterInterface
 {
+    /** @var CouchDbConnector */
     private $connector;
 
+    /** @var array */
     private $settings;
 
     public function __construct(CouchDbConnector $connector, array $settings = [])
@@ -88,6 +90,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
         return $revision ?? null;
     }
 
+    /** @return mixed */
     private function request(string $identifier, string $method, array $body = [], array $params = [])
     {
         $uri = $this->buildUri($identifier, $params);
@@ -99,7 +102,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
         return $this->connector->getConnection()->send($request);
     }
 
-    private function buildUri(string $identifier, array $params = [])
+    private function buildUri(string $identifier, array $params = []): string
     {
         $settings = $this->connector->getSettings();
         $uri = sprintf('/%s/%s', $settings['database'], $identifier);

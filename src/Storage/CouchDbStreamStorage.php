@@ -14,6 +14,7 @@ use Daikon\EventSourcing\EventStore\Stream\StreamRevision;
 
 final class CouchDbStreamStorage implements StreamStorageInterface
 {
+    /** @var CouchDbStorageAdapter */
     private $storageAdapter;
 
     public function __construct(CouchDbStorageAdapter $storageAdapter)

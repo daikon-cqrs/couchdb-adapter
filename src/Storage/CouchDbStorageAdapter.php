@@ -11,8 +11,10 @@ use GuzzleHttp\Psr7\Request;
 
 final class CouchDbStorageAdapter implements StorageAdapterInterface
 {
+    /** @var CouchDbConnector */
     private $connector;
 
+    /** @var array */
     private $settings;
 
     public function __construct(CouchDbConnector $connector, array $settings = [])
@@ -45,9 +47,14 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
             throw new DbalException('Failed to read data for '.$identifier);
         }
 
-        return CommitSequence::fromNative(array_map(function (array $commitData) {
-            return $commitData['doc'];
-        }, array_reverse($rawResponse['rows'])));
+        return CommitSequence::fromNative(
+            array_map(
+                function (array $commitData): array {
+                    return $commitData['doc'];
+                },
+                array_reverse($rawResponse['rows'])
+            )
+        );
     }
 
     public function append(string $identifier, array $body): void
@@ -65,6 +72,7 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
         throw new DbalException('Not yet implemented');
     }
 
+    /** @return mixed */
     private function request(string $identifier, string $method, array $body = [], array $params = [])
     {
         $uri = $this->buildUri($identifier, $params);
@@ -76,7 +84,7 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
         return $this->connector->getConnection()->send($request);
     }
 
-    private function buildUri(string $identifier, array $params = [])
+    private function buildUri(string $identifier, array $params = []): string
     {
         $settings = $this->connector->getSettings();
         $uri = sprintf('/%s/%s', $settings['database'], $identifier);

@@ -33,7 +33,8 @@
         "sniff": [
             "@code-sniffer",
             "@copy-paste-detector",
-            "@validate-json"
+            "@validate-json",
+            "psalm"
         ],
         "test": "phpunit --no-coverage",
         "tests": "phpunit",
