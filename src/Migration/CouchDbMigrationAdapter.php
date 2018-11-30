@@ -36,7 +36,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
     {
         try {
             $response = $this->request($identifier, 'GET');
-            $rawResponse = json_decode($response->getBody(), true);
+            $rawResponse = json_decode($response->getBody()->getContents(), true);
         } catch (RequestException $error) {
             if ($error->hasResponse() && $error->getResponse()->getStatusCode() === 404) {
                 return new MigrationList;
@@ -58,7 +58,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
         }
 
         $response = $this->request($identifier, 'PUT', $body);
-        $rawResponse = json_decode($response->getBody(), true);
+        $rawResponse = json_decode($response->getBody()->getContents(), true);
 
         if (!isset($rawResponse['ok']) || !isset($rawResponse['rev'])) {
             throw new MigrationException('Failed to write migration data for '.$identifier);
