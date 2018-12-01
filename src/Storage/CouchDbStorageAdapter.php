@@ -49,7 +49,7 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
         ];
 
         $response = $this->request($viewPath, 'GET', [], $viewParams);
-        $rawResponse = json_decode($response->getBody(), true);
+        $rawResponse = json_decode($response->getBody()->getContents(), true);
 
         if (!isset($rawResponse['total_rows'])) {
             throw new DbalException('Failed to read data for '.$identifier);
@@ -68,7 +68,7 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
     public function append(string $identifier, array $body): void
     {
         $response = $this->request($identifier, 'PUT', $body);
-        $rawResponse = json_decode($response->getBody(), true);
+        $rawResponse = json_decode($response->getBody()->getContents(), true);
 
         if (!isset($rawResponse['ok']) || !isset($rawResponse['rev'])) {
             throw new DbalException('Failed to write data for '.$identifier);
