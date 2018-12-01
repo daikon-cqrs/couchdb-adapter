@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of the daikon-cqrs/couchdb-adapter project.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Daikon\CouchDb\Storage;
 
@@ -14,6 +22,7 @@ use Daikon\EventSourcing\EventStore\Stream\StreamRevision;
 
 final class CouchDbStreamStorage implements StreamStorageInterface
 {
+    /** @var CouchDbStorageAdapter */
     private $storageAdapter;
 
     public function __construct(CouchDbStorageAdapter $storageAdapter)
@@ -36,7 +45,7 @@ final class CouchDbStreamStorage implements StreamStorageInterface
         /** @var CommitInterface $commit */
         foreach ($commitSequence as $commit) {
             $identifier = $stream->getStreamId()->toNative().'-'.$commit->getStreamRevision();
-            $this->storageAdapter->append($identifier, $commit->toArray());
+            $this->storageAdapter->append($identifier, $commit->toNative());
         }
         return new StorageSuccess;
     }

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of the daikon-cqrs/couchdb-adapter project.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Daikon\CouchDb\Storage;
 
@@ -11,8 +19,10 @@ use GuzzleHttp\Psr7\Request;
 
 final class CouchDbStorageAdapter implements StorageAdapterInterface
 {
+    /** @var CouchDbConnector */
     private $connector;
 
+    /** @var array */
     private $settings;
 
     public function __construct(CouchDbConnector $connector, array $settings = [])
@@ -39,21 +49,26 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
         ];
 
         $response = $this->request($viewPath, 'GET', [], $viewParams);
-        $rawResponse = json_decode($response->getBody(), true);
+        $rawResponse = json_decode($response->getBody()->getContents(), true);
 
         if (!isset($rawResponse['total_rows'])) {
             throw new DbalException('Failed to read data for '.$identifier);
         }
 
-        return CommitSequence::fromArray(array_map(function (array $commitData) {
-            return $commitData['doc'];
-        }, array_reverse($rawResponse['rows'])));
+        return CommitSequence::fromNative(
+            array_map(
+                function (array $commit): array {
+                    return $commit['doc'];
+                },
+                array_reverse($rawResponse['rows'])
+            )
+        );
     }
 
     public function append(string $identifier, array $body): void
     {
         $response = $this->request($identifier, 'PUT', $body);
-        $rawResponse = json_decode($response->getBody(), true);
+        $rawResponse = json_decode($response->getBody()->getContents(), true);
 
         if (!isset($rawResponse['ok']) || !isset($rawResponse['rev'])) {
             throw new DbalException('Failed to write data for '.$identifier);
@@ -65,6 +80,7 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
         throw new DbalException('Not yet implemented');
     }
 
+    /** @return mixed */
     private function request(string $identifier, string $method, array $body = [], array $params = [])
     {
         $uri = $this->buildUri($identifier, $params);
@@ -76,7 +92,7 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
         return $this->connector->getConnection()->send($request);
     }
 
-    private function buildUri(string $identifier, array $params = [])
+    private function buildUri(string $identifier, array $params = []): string
     {
         $settings = $this->connector->getSettings();
         $uri = sprintf('/%s/%s', $settings['database'], $identifier);

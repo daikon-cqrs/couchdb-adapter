@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of the daikon-cqrs/couchdb-adapter project.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Daikon\CouchDb\Migration;
 
@@ -12,8 +20,10 @@ use GuzzleHttp\Psr7\Request;
 
 final class CouchDbMigrationAdapter implements MigrationAdapterInterface
 {
+    /** @var CouchDbConnector */
     private $connector;
 
+    /** @var array */
     private $settings;
 
     public function __construct(CouchDbConnector $connector, array $settings = [])
@@ -26,7 +36,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
     {
         try {
             $response = $this->request($identifier, 'GET');
-            $rawResponse = json_decode($response->getBody(), true);
+            $rawResponse = json_decode($response->getBody()->getContents(), true);
         } catch (RequestException $error) {
             if ($error->hasResponse() && $error->getResponse()->getStatusCode() === 404) {
                 return new MigrationList;
@@ -40,7 +50,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
     {
         $body = [
             'target' => $identifier,
-            'migrations' => $executedMigrations->toArray()
+            'migrations' => $executedMigrations->toNative()
         ];
 
         if ($revision = $this->getCurrentRevision($identifier)) {
@@ -48,7 +58,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
         }
 
         $response = $this->request($identifier, 'PUT', $body);
-        $rawResponse = json_decode($response->getBody(), true);
+        $rawResponse = json_decode($response->getBody()->getContents(), true);
 
         if (!isset($rawResponse['ok']) || !isset($rawResponse['rev'])) {
             throw new MigrationException('Failed to write migration data for '.$identifier);
@@ -88,6 +98,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
         return $revision ?? null;
     }
 
+    /** @return mixed */
     private function request(string $identifier, string $method, array $body = [], array $params = [])
     {
         $uri = $this->buildUri($identifier, $params);
@@ -99,7 +110,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
         return $this->connector->getConnection()->send($request);
     }
 
-    private function buildUri(string $identifier, array $params = [])
+    private function buildUri(string $identifier, array $params = []): string
     {
         $settings = $this->connector->getSettings();
         $uri = sprintf('/%s/%s', $settings['database'], $identifier);
