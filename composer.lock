@@ -111,12 +111,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/dbal.git",
-                "reference": "f04400706961a1e3ba6c00aab94a7d59859d620b"
+                "reference": "2c6ece9aab522d2c07e79d8e9e7d9adb765a18bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/dbal/zipball/f04400706961a1e3ba6c00aab94a7d59859d620b",
-                "reference": "f04400706961a1e3ba6c00aab94a7d59859d620b",
+                "url": "https://api.github.com/repos/daikon-cqrs/dbal/zipball/2c6ece9aab522d2c07e79d8e9e7d9adb765a18bb",
+                "reference": "2c6ece9aab522d2c07e79d8e9e7d9adb765a18bb",
                 "shasum": ""
             },
             "require": {
@@ -150,7 +150,7 @@
                 "dbal",
                 "immutable"
             ],
-            "time": "2018-12-01T00:09:16+00:00"
+            "time": "2018-12-01T13:37:36+00:00"
         },
         {
             "name": "daikon/event-sourcing",
@@ -203,12 +203,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/interop.git",
-                "reference": "5b9839d61879ab09f699d79f23555f5d53b7c65d"
+                "reference": "386f3c9140f59cdaa73213ed70a8a4dfd9635b1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/interop/zipball/5b9839d61879ab09f699d79f23555f5d53b7c65d",
-                "reference": "5b9839d61879ab09f699d79f23555f5d53b7c65d",
+                "url": "https://api.github.com/repos/daikon-cqrs/interop/zipball/386f3c9140f59cdaa73213ed70a8a4dfd9635b1f",
+                "reference": "386f3c9140f59cdaa73213ed70a8a4dfd9635b1f",
                 "shasum": ""
             },
             "require": {
@@ -230,7 +230,7 @@
             ],
             "description": "Interop interfaces used across Daikon components.",
             "homepage": "https://github.com/daikon-cqrs/interop",
-            "time": "2018-11-30T12:30:50+00:00"
+            "time": "2018-12-01T00:54:30+00:00"
         },
         {
             "name": "daikon/message-bus",
@@ -238,12 +238,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/message-bus.git",
-                "reference": "c500b5c919d7b84c73aa0cb2270e7463640a0968"
+                "reference": "061ec02b8d189f9783968315062738d72d9edea9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/message-bus/zipball/c500b5c919d7b84c73aa0cb2270e7463640a0968",
-                "reference": "c500b5c919d7b84c73aa0cb2270e7463640a0968",
+                "url": "https://api.github.com/repos/daikon-cqrs/message-bus/zipball/061ec02b8d189f9783968315062738d72d9edea9",
+                "reference": "061ec02b8d189f9783968315062738d72d9edea9",
                 "shasum": ""
             },
             "require": {
@@ -274,7 +274,7 @@
                 "message-bus",
                 "messaging"
             ],
-            "time": "2018-11-30T20:51:42+00:00"
+            "time": "2018-12-01T13:30:37+00:00"
         },
         {
             "name": "daikon/read-model",
@@ -282,12 +282,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/daikon-cqrs/read-model.git",
-                "reference": "07446ff6300dcbc717d5a9361514665ec10ff349"
+                "reference": "e372cdb03286eaa7c71d56ce699baca35008812a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/daikon-cqrs/read-model/zipball/07446ff6300dcbc717d5a9361514665ec10ff349",
-                "reference": "07446ff6300dcbc717d5a9361514665ec10ff349",
+                "url": "https://api.github.com/repos/daikon-cqrs/read-model/zipball/e372cdb03286eaa7c71d56ce699baca35008812a",
+                "reference": "e372cdb03286eaa7c71d56ce699baca35008812a",
                 "shasum": ""
             },
             "require": {
@@ -322,7 +322,7 @@
                 "read-model",
                 "repository"
             ],
-            "time": "2018-12-01T00:07:01+00:00"
+            "time": "2018-12-01T13:35:12+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
