@@ -38,6 +38,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
             $response = $this->request($identifier, 'GET');
             $rawResponse = json_decode($response->getBody()->getContents(), true);
         } catch (RequestException $error) {
+            /** @psalm-suppress PossiblyNullReference */
             if ($error->hasResponse() && $error->getResponse()->getStatusCode() === 404) {
                 return new MigrationList;
             }
@@ -90,6 +91,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
             $response = $this->request($identifier, 'HEAD');
             $revision = trim(current($response->getHeader('ETag')), '"');
         } catch (RequestException $error) {
+            /** @psalm-suppress PossiblyNullReference */
             if (!$error->hasResponse() || $error->getResponse()->getStatusCode() !== 404) {
                 throw $error;
             }
