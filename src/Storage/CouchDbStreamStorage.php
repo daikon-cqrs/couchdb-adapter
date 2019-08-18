@@ -36,8 +36,11 @@ final class CouchDbStreamStorage implements StreamStorageInterface
         AggregateRevision $from = null,
         AggregateRevision $to = null
     ): StreamInterface {
-        $commitSequence = $this->storageAdapter->load($aggregateId->toNative());
-        return new Stream($aggregateId, $commitSequence);
+        $commitSequence = $this->storageAdapter->load((string) $aggregateId);
+        return Stream::fromNative([
+            'aggregateId' => $aggregateId,
+            'commitSequence' => $commitSequence
+        ]);
     }
 
     public function append(StreamInterface $stream, Sequence $knownHead): StorageResultInterface
@@ -45,7 +48,7 @@ final class CouchDbStreamStorage implements StreamStorageInterface
         $commitSequence = $stream->getCommitRange($knownHead->increment(), $stream->getSequence());
         /** @var CommitInterface $commit */
         foreach ($commitSequence as $commit) {
-            $identifier = $stream->getStreamId()->toNative() . '-' . $commit->getSequence();
+            $identifier = $stream->getAggregateId() . '-' . $commit->getSequence();
             $this->storageAdapter->append($identifier, $commit->toNative());
         }
         return new StorageSuccess;
