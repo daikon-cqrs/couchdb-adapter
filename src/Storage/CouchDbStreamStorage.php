@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the daikon-cqrs/couchdb-adapter project.
  *
@@ -15,10 +16,10 @@ use Daikon\EventSourcing\EventStore\Commit\CommitInterface;
 use Daikon\EventSourcing\EventStore\Storage\StorageResultInterface;
 use Daikon\EventSourcing\EventStore\Storage\StorageSuccess;
 use Daikon\EventSourcing\EventStore\Storage\StreamStorageInterface;
+use Daikon\EventSourcing\EventStore\Stream\Sequence;
 use Daikon\EventSourcing\EventStore\Stream\Stream;
 use Daikon\EventSourcing\EventStore\Stream\StreamIdInterface;
 use Daikon\EventSourcing\EventStore\Stream\StreamInterface;
-use Daikon\EventSourcing\EventStore\Stream\StreamRevision;
 
 final class CouchDbStreamStorage implements StreamStorageInterface
 {
@@ -39,12 +40,12 @@ final class CouchDbStreamStorage implements StreamStorageInterface
         return new Stream($streamId, $commitSequence);
     }
 
-    public function append(StreamInterface $stream, StreamRevision $knownHead): StorageResultInterface
+    public function append(StreamInterface $stream, Sequence $knownHead): StorageResultInterface
     {
-        $commitSequence = $stream->getCommitRange($knownHead->increment(), $stream->getStreamRevision());
+        $commitSequence = $stream->getCommitRange($knownHead->increment(), $stream->getSequence());
         /** @var CommitInterface $commit */
         foreach ($commitSequence as $commit) {
-            $identifier = $stream->getStreamId()->toNative().'-'.$commit->getStreamRevision();
+            $identifier = $stream->getStreamId()->toNative() . '-' . $commit->getSequence();
             $this->storageAdapter->append($identifier, $commit->toNative());
         }
         return new StorageSuccess;
