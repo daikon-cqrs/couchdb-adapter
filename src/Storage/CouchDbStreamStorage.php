@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Daikon\CouchDb\Storage;
 
+use Daikon\EventSourcing\Aggregate\AggregateIdInterface;
 use Daikon\EventSourcing\Aggregate\AggregateRevision;
 use Daikon\EventSourcing\EventStore\Commit\CommitInterface;
 use Daikon\EventSourcing\EventStore\Storage\StorageResultInterface;
@@ -18,7 +19,6 @@ use Daikon\EventSourcing\EventStore\Storage\StorageSuccess;
 use Daikon\EventSourcing\EventStore\Storage\StreamStorageInterface;
 use Daikon\EventSourcing\EventStore\Stream\Sequence;
 use Daikon\EventSourcing\EventStore\Stream\Stream;
-use Daikon\EventSourcing\EventStore\Stream\StreamIdInterface;
 use Daikon\EventSourcing\EventStore\Stream\StreamInterface;
 
 final class CouchDbStreamStorage implements StreamStorageInterface
@@ -32,12 +32,12 @@ final class CouchDbStreamStorage implements StreamStorageInterface
     }
 
     public function load(
-        StreamIdInterface $streamId,
+        AggregateIdInterface $aggregateId,
         AggregateRevision $from = null,
         AggregateRevision $to = null
     ): StreamInterface {
-        $commitSequence = $this->storageAdapter->load($streamId->toNative());
-        return new Stream($streamId, $commitSequence);
+        $commitSequence = $this->storageAdapter->load($aggregateId->toNative());
+        return new Stream($aggregateId, $commitSequence);
     }
 
     public function append(StreamInterface $stream, Sequence $knownHead): StorageResultInterface
