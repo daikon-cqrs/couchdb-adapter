@@ -38,8 +38,8 @@ final class CouchDbStreamStorage implements StreamStorageInterface
     ): StreamInterface {
         $commitSequence = $this->storageAdapter->load((string) $aggregateId);
         return Stream::fromNative([
-            'aggregateId' => $aggregateId,
-            'commitSequence' => $commitSequence
+            'aggregateId' => $aggregateId->toNative(),
+            'commitSequence' => $commitSequence->toNative()
         ]);
     }
 
