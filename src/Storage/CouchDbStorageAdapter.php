@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * This file is part of the daikon-cqrs/couchdb-adapter project.
  *
@@ -6,16 +6,17 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
 namespace Daikon\CouchDb\Storage;
 
 use Daikon\CouchDb\Connector\CouchDbConnector;
 use Daikon\Dbal\Exception\DbalException;
+use Daikon\Dbal\Exception\DocumentConflict;
 use Daikon\EventSourcing\EventStore\Commit\CommitSequence;
 use Daikon\EventSourcing\EventStore\Commit\CommitSequenceInterface;
 use Daikon\EventSourcing\EventStore\Storage\StorageAdapterInterface;
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 
 final class CouchDbStorageAdapter implements StorageAdapterInterface
 {
@@ -31,7 +32,7 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
         $this->settings = $settings;
     }
 
-    public function load(string $identifier): CommitSequenceInterface
+    public function load(string $identifier, string $from = null, string $to = null): CommitSequenceInterface
     {
         $viewPath = sprintf(
             '/_design/%s/_view/%s',
@@ -40,19 +41,21 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
         );
 
         $viewParams = [
-            'startkey' => sprintf('["%s", {}]', $identifier),
-            'endkey' => sprintf('["%s", 1]', $identifier),
+            'startkey' => sprintf('["%s", %s]', $identifier, $from ?: '{}'),
+            'endkey' => sprintf('["%s", %s]', $identifier, $to ?: 1),
             'include_docs' => 'true',
             'reduce' => 'false',
             'descending' => 'true',
-            'limit' => 1000 // @todo use snapshot size config setting as soon as available
+            'limit' => 5000 //@todo use snapshot size config setting as soon as available
         ];
 
+        /** @var Response $response */
         $response = $this->request($viewPath, 'GET', [], $viewParams);
-        $rawResponse = json_decode($response->getBody()->getContents(), true);
+        $rawResponse = json_decode((string)$response->getBody(), true);
 
-        if (!isset($rawResponse['total_rows'])) {
-            throw new DbalException('Failed to read data for '.$identifier);
+        if (!isset($rawResponse['rows'])) {
+            //@todo add error logging
+            throw new DbalException('Failed to load data for '.$identifier);
         }
 
         return CommitSequence::fromNative(
@@ -67,17 +70,23 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
 
     public function append(string $identifier, array $body): void
     {
+        /** @var Response $response */
         $response = $this->request($identifier, 'PUT', $body);
-        $rawResponse = json_decode($response->getBody()->getContents(), true);
 
+        if ($response->getStatusCode() === 409) {
+            throw new DocumentConflict;
+        }
+
+        $rawResponse = json_decode((string)$response->getBody(), true);
         if (!isset($rawResponse['ok']) || !isset($rawResponse['rev'])) {
-            throw new DbalException('Failed to write data for '.$identifier);
+            //@todo add error logging
+            throw new DbalException('Failed to append data for '.$identifier);
         }
     }
 
     public function purge(string $identifier): void
     {
-        throw new DbalException('Not yet implemented');
+        throw new DbalException('Not implemented');
     }
 
     /** @return mixed */
@@ -89,7 +98,13 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
             ? new Request($method, $uri)
             : new Request($method, $uri, [], json_encode($body));
 
-        return $this->connector->getConnection()->send($request);
+        try {
+            $response = $this->connector->getConnection()->send($request);
+        } catch (BadResponseException $error) {
+            $response = $error->getResponse();
+        }
+
+        return $response;
     }
 
     private function buildUri(string $identifier, array $params = []): string

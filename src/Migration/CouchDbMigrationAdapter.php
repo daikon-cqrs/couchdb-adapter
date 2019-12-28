@@ -1,12 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * This file is part of the daikon-cqrs/couchdb-adapter project.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-declare(strict_types=1);
 
 namespace Daikon\CouchDb\Migration;
 
@@ -15,7 +13,7 @@ use Daikon\Dbal\Connector\ConnectorInterface;
 use Daikon\Dbal\Exception\MigrationException;
 use Daikon\Dbal\Migration\MigrationAdapterInterface;
 use Daikon\Dbal\Migration\MigrationList;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Psr7\Request;
 
 final class CouchDbMigrationAdapter implements MigrationAdapterInterface
@@ -37,8 +35,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
         try {
             $response = $this->request($identifier, 'GET');
             $rawResponse = json_decode($response->getBody()->getContents(), true);
-        } catch (RequestException $error) {
-            /** @psalm-suppress PossiblyNullReference */
+        } catch (BadResponseException $error) {
             if ($error->hasResponse() && $error->getResponse()->getStatusCode() === 404) {
                 return new MigrationList;
             }
@@ -90,8 +87,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
         try {
             $response = $this->request($identifier, 'HEAD');
             $revision = trim(current($response->getHeader('ETag')), '"');
-        } catch (RequestException $error) {
-            /** @psalm-suppress PossiblyNullReference */
+        } catch (BadResponseException $error) {
             if (!$error->hasResponse() || $error->getResponse()->getStatusCode() !== 404) {
                 throw $error;
             }
