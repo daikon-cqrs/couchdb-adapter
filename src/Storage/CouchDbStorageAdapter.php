@@ -20,11 +20,9 @@ use GuzzleHttp\Psr7\Response;
 
 final class CouchDbStorageAdapter implements StorageAdapterInterface
 {
-    /** @var CouchDbConnector */
-    private $connector;
+    private CouchDbConnector $connector;
 
-    /** @var array */
-    private $settings;
+    private array $settings;
 
     public function __construct(CouchDbConnector $connector, array $settings = [])
     {
@@ -60,9 +58,7 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
 
         return CommitSequence::fromNative(
             array_map(
-                function (array $commit): array {
-                    return $commit['doc'];
-                },
+                fn(array $commit): array => $commit['doc'],
                 array_reverse($rawResponse['rows'])
             )
         );

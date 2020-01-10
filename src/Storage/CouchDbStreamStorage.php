@@ -22,8 +22,7 @@ use Daikon\EventSourcing\EventStore\Stream\StreamInterface;
 
 final class CouchDbStreamStorage implements StreamStorageInterface
 {
-    /** @var CouchDbStorageAdapter */
-    private $storageAdapter;
+    private CouchDbStorageAdapter $storageAdapter;
 
     public function __construct(CouchDbStorageAdapter $storageAdapter)
     {

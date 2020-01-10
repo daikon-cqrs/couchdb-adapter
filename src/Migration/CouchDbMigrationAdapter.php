@@ -10,19 +10,18 @@ namespace Daikon\CouchDb\Migration;
 
 use Daikon\CouchDb\Connector\CouchDbConnector;
 use Daikon\Dbal\Connector\ConnectorInterface;
-use Daikon\Dbal\Exception\MigrationException;
 use Daikon\Dbal\Migration\MigrationAdapterInterface;
 use Daikon\Dbal\Migration\MigrationList;
+use DateTimeImmutable;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Psr7\Request;
+use RuntimeException;
 
 final class CouchDbMigrationAdapter implements MigrationAdapterInterface
 {
-    /** @var CouchDbConnector */
-    private $connector;
+    private CouchDbConnector $connector;
 
-    /** @var array */
-    private $settings;
+    private array $settings;
 
     public function __construct(CouchDbConnector $connector, array $settings = [])
     {
@@ -34,18 +33,24 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
     {
         try {
             $response = $this->request($identifier, 'GET');
-            $rawResponse = json_decode($response->getBody()->getContents(), true);
+            $rawResponse = json_decode((string)$response->getBody(), true);
         } catch (BadResponseException $error) {
+            /** @psalm-suppress PossiblyNullReference */
             if ($error->hasResponse() && $error->getResponse()->getStatusCode() === 404) {
                 return new MigrationList;
             }
             throw $error;
         }
+
         return $this->createMigrationList($rawResponse['migrations']);
     }
 
     public function write(string $identifier, MigrationList $executedMigrations): void
     {
+        if ($executedMigrations->isEmpty()) {
+            return;
+        }
+
         $body = [
             'target' => $identifier,
             'migrations' => $executedMigrations->toNative()
@@ -56,10 +61,10 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
         }
 
         $response = $this->request($identifier, 'PUT', $body);
-        $rawResponse = json_decode($response->getBody()->getContents(), true);
+        $rawResponse = json_decode((string)$response->getBody(), true);
 
         if (!isset($rawResponse['ok']) || !isset($rawResponse['rev'])) {
-            throw new MigrationException('Failed to write migration data for '.$identifier);
+            throw new RuntimeException('Failed to write migration data for '.$identifier);
         }
     }
 
@@ -77,7 +82,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
              * Explicitly not using a service locator to make migration classes here because
              * it could enable unusual behaviour.
              */
-            $migrations[] = new $migrationClass(new \DateTimeImmutable($migration['executedAt']));
+            $migrations[] = new $migrationClass(new DateTimeImmutable($migration['executedAt']));
         }
         return (new MigrationList($migrations))->sortByVersion();
     }
@@ -88,6 +93,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
             $response = $this->request($identifier, 'HEAD');
             $revision = trim(current($response->getHeader('ETag')), '"');
         } catch (BadResponseException $error) {
+            /** @psalm-suppress PossiblyNullReference */
             if (!$error->hasResponse() || $error->getResponse()->getStatusCode() !== 404) {
                 throw $error;
             }
