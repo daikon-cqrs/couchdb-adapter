@@ -89,6 +89,8 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
 
     private function getCurrentRevision(string $identifier): ?string
     {
+        $revision = null;
+
         try {
             $response = $this->request($identifier, 'HEAD');
             $revision = trim(current($response->getHeader('ETag')), '"');
@@ -99,7 +101,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
             }
         }
 
-        return $revision ?? null;
+        return $revision;
     }
 
     /** @return mixed */
