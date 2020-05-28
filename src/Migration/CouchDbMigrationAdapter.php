@@ -10,12 +10,12 @@ namespace Daikon\CouchDb\Migration;
 
 use Daikon\CouchDb\Connector\CouchDbConnector;
 use Daikon\Dbal\Connector\ConnectorInterface;
+use Daikon\Dbal\Exception\DbalException;
 use Daikon\Dbal\Migration\MigrationAdapterInterface;
 use Daikon\Dbal\Migration\MigrationList;
 use DateTimeImmutable;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Psr7\Request;
-use RuntimeException;
 
 final class CouchDbMigrationAdapter implements MigrationAdapterInterface
 {
@@ -64,7 +64,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
         $rawResponse = json_decode((string)$response->getBody(), true);
 
         if (!isset($rawResponse['ok']) || !isset($rawResponse['rev'])) {
-            throw new RuntimeException('Failed to write migration data for '.$identifier);
+            throw new DbalException('Failed to write migration data for '.$identifier);
         }
     }
 
