@@ -53,7 +53,7 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
 
         if (!isset($rawResponse['rows'])) {
             //@todo add error logging
-            throw new DbalException('Failed to load data for '.$identifier);
+            throw new DbalException("Failed to load data for '$identifier'.");
         }
 
         return CommitSequence::fromNative(
@@ -76,13 +76,13 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
         $rawResponse = json_decode((string)$response->getBody(), true);
         if (!isset($rawResponse['ok']) || !isset($rawResponse['rev'])) {
             //@todo add error logging
-            throw new DbalException('Failed to append data for '.$identifier);
+            throw new DbalException("Failed to append data for '$identifier'.");
         }
     }
 
     public function purge(string $identifier): void
     {
-        throw new DbalException('Not implemented');
+        throw new DbalException('Not implemented.');
     }
 
     /** @return mixed */

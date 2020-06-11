@@ -8,6 +8,7 @@
 
 namespace Daikon\CouchDb\Migration;
 
+use Daikon\Dbal\Exception\DbalException;
 use Daikon\Dbal\Migration\MigrationTrait;
 use GuzzleHttp\Exception\RequestException;
 
@@ -23,7 +24,7 @@ trait CouchDbMigrationTrait
             $client->put('/'.$database);
         } catch (RequestException $error) {
             if (!$error->hasResponse() || !$error->getResponse()->getStatusCode() === 409) {
-                throw $error;
+                throw new DbalException("Failed to create database '$database'.");
             }
         }
     }
@@ -36,7 +37,7 @@ trait CouchDbMigrationTrait
             $client->delete('/'.$database);
         } catch (RequestException $error) {
             if (!$error->hasResponse() || !$error->getResponse()->getStatusCode() === 404) {
-                throw $error;
+                throw new DbalException("Failed to delete database '$database'.");
             }
         }
     }

@@ -39,7 +39,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
             if ($error->hasResponse() && $error->getResponse()->getStatusCode() === 404) {
                 return new MigrationList;
             }
-            throw $error;
+            throw new DbalException("Failed to read migrations for '$identifier'.");
         }
 
         return $this->createMigrationList($rawResponse['migrations']);
@@ -64,7 +64,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
         $rawResponse = json_decode((string)$response->getBody(), true);
 
         if (!isset($rawResponse['ok']) || !isset($rawResponse['rev'])) {
-            throw new DbalException('Failed to write migration data for '.$identifier);
+            throw new DbalException("Failed to write migrations for '$identifier'.");
         }
     }
 
@@ -97,7 +97,7 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
         } catch (BadResponseException $error) {
             /** @psalm-suppress PossiblyNullReference */
             if (!$error->hasResponse() || $error->getResponse()->getStatusCode() !== 404) {
-                throw $error;
+                throw new DbalException("Failed to get current migration for '$identifier'.");
             }
         }
 
