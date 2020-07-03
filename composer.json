@@ -1,7 +1,7 @@
 {
     "name": "daikon/couchdb-adapter",
     "type": "library",
-    "description": "CouchDB 1|2 adapter for Daikon-CQRS projects.",
+    "description": "CouchDB adapter for Daikon-CQRS projects.",
     "keywords": [ "couchdb", "adapter" ],
     "homepage": "https://github.com/daikon-cqrs/couchdb-adapter",
     "license": "MPL-2.0",

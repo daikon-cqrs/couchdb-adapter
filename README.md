@@ -11,4 +11,4 @@
 [![Scrutinizer code quality](https://img.shields.io/scrutinizer/quality/g/daikon-cqrs/couchdb-adapter/master)](https://scrutinizer-ci.com/g/daikon-cqrs/couchdb-adapter/?branch=master)
 [![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/daikon-cqrs/couchdb-adapter)](https://codeclimate.com/github/daikon-cqrs/couchdb-adapter/maintainability)
 
-CouchDB 1|2 adapter for Daikon-CQRS projects.
+CouchDB adapter for Daikon-CQRS projects.
