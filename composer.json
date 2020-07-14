@@ -11,7 +11,7 @@
         "php": "^7.4",
         "daikon/dbal": "master@dev",
         "daikon/event-sourcing": "master@dev",
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "^6.3 || ^7.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0",
