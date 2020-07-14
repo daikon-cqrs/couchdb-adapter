@@ -9,12 +9,12 @@
 namespace Daikon\CouchDb\Connector;
 
 use Daikon\Dbal\Connector\ConnectorInterface;
-use Daikon\Dbal\Connector\ConnectorTrait;
+use Daikon\Dbal\Connector\ProvidesConnector;
 use GuzzleHttp\Client;
 
 final class CouchDbConnector implements ConnectorInterface
 {
-    use ConnectorTrait;
+    use ProvidesConnector;
 
     protected function connect(): Client
     {
