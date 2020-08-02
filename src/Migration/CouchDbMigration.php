@@ -9,14 +9,12 @@
 namespace Daikon\CouchDb\Migration;
 
 use Daikon\Dbal\Exception\DbalException;
-use Daikon\Dbal\Migration\MigrationTrait;
+use Daikon\Dbal\Migration\Migration;
 use GuzzleHttp\Exception\RequestException;
 
-trait CouchDbMigrationTrait
+abstract class CouchDbMigration extends Migration
 {
-    use MigrationTrait;
-
-    private function createDatabase(string $database): void
+    protected function createDatabase(string $database): void
     {
         $client = $this->connector->getConnection();
 
@@ -29,7 +27,7 @@ trait CouchDbMigrationTrait
         }
     }
 
-    private function deleteDatabase(string $database): void
+    protected function deleteDatabase(string $database): void
     {
         $client = $this->connector->getConnection();
 
@@ -42,7 +40,7 @@ trait CouchDbMigrationTrait
         }
     }
 
-    private function createDesignDoc(string $database, string $name, array $views): void
+    protected function createDesignDoc(string $database, string $name, array $views): void
     {
         $client = $this->connector->getConnection();
 
@@ -55,7 +53,7 @@ trait CouchDbMigrationTrait
         $client->put($requestPath, ['body' => json_encode($body)]);
     }
 
-    private function deleteDesignDoc(string $database, string $name): void
+    protected function deleteDesignDoc(string $database, string $name): void
     {
         $client = $this->connector->getConnection();
         $requestPath = sprintf('/%s/_design/%s', $database, $name);
@@ -64,7 +62,7 @@ trait CouchDbMigrationTrait
         $client->delete(sprintf('%s?rev=%s', $requestPath, $revision));
     }
 
-    private function getDatabaseName(): string
+    protected function getDatabaseName(): string
     {
         $connectorSettings = $this->connector->getSettings();
         return $connectorSettings['database'];
