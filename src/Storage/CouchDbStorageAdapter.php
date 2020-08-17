@@ -64,10 +64,10 @@ final class CouchDbStorageAdapter implements StorageAdapterInterface
         );
     }
 
-    public function append(string $identifier, array $body): void
+    public function append(string $identifier, array $data): void
     {
         /** @var Response $response */
-        $response = $this->request($identifier, 'PUT', $body);
+        $response = $this->request($identifier, 'PUT', $data);
 
         if ($response->getStatusCode() === 409) {
             throw new DocumentConflict;

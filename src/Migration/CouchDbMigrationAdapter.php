@@ -45,15 +45,15 @@ final class CouchDbMigrationAdapter implements MigrationAdapterInterface
         return $this->createMigrationList($rawResponse['migrations']);
     }
 
-    public function write(string $identifier, MigrationList $executedMigrations): void
+    public function write(string $identifier, MigrationList $migrationList): void
     {
-        if ($executedMigrations->isEmpty()) {
+        if ($migrationList->isEmpty()) {
             return;
         }
 
         $body = [
             'target' => $identifier,
-            'migrations' => $executedMigrations->toNative()
+            'migrations' => $migrationList->toNative()
         ];
 
         if ($revision = $this->getCurrentRevision($identifier)) {
