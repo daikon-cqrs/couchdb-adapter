@@ -8,7 +8,7 @@
     "prefer-stable": true,
     "minimum-stability": "dev",
     "require": {
-        "php": "^7.4",
+        "php": "^7.4|^8.0",
         "daikon/dbal": "master@dev",
         "daikon/event-sourcing": "master@dev",
         "guzzlehttp/guzzle": "^7.0"
